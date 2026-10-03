@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Night Planner</title>
+<title>Bitb Planner</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
   :root{
@@ -74,8 +74,8 @@
   }
 
   h1.date-head{
-    font-family:var(--sans); font-weight:700; font-size:28px; text-align:center;
-    margin:0 0 4px; color:var(--text);
+    font-family:var(--serif); font-weight:600; font-size:28px; text-align:center;
+    margin:0 0 16px; color:var(--text);
   }
   .date-row{display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:22px;}
   .date-row input[type="date"]{
@@ -325,16 +325,16 @@
     return row;
   }
   function renumber(){
-    document.querySelectorAll('#improveList .list-item').forEach(function(row, i){
+    document.querySelectorAll('#improveList .list-item, #inventoryList .list-item').forEach(function(row, i){
       var idx = row.querySelector('.idx');
       if(idx) idx.textContent = (i+1)+'.';
     });
   }
   var inventoryList = document.getElementById('inventoryList');
   var improveList = document.getElementById('improveList');
-  function seedLists(){
+  function s(){
     for(var i=0;i<3;i++){
-      inventoryList.appendChild(makeListItem(true, i, '', false));
+      inventoryList.appendChild(makeListItem(false, i, '', false));
       improveList.appendChild(makeListItem(false, i, '', false));
     }
   }
@@ -383,7 +383,7 @@
     inventoryList.innerHTML = '';
     improveList.innerHTML = '';
     var inv = (rec.inventory && rec.inventory.length) ? rec.inventory : [{checked:false,text:''},{checked:false,text:''},{checked:false,text:''}];
-    inv.forEach(function(item,i){ inventoryList.appendChild(makeListItem(true, i, item.text, item.checked)); });
+    inv.forEach(function(item,i){ inventoryList.appendChild(makeListItem(false, i, item.text, item.checked)); });
     var imp = (rec.improve && rec.improve.length) ? rec.improve : ['','',''];
     imp.forEach(function(text,i){ improveList.appendChild(makeListItem(false, i, text, false)); });
     renumber();
@@ -541,9 +541,9 @@
     body += emptyPara();
 
     body += p('Productivity inventory', {bold:true, size:26, spacingAfter:100, pageBreakBefore:true});
-    plan.inventory.forEach(function(item){
+    plan.inventory.forEach(function(item,i){
       if(item.text && item.text.trim().length){
-        body += p((item.checked? '☑ ' : '☐ ') + item.text, {size:21});
+        body += p((i+1) + '. ' + item.text, {size:21});
       }
     });
     if(!plan.inventory.some(function(i){return i.text && i.text.trim().length;})){
